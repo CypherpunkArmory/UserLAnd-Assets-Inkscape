@@ -19,11 +19,18 @@ apt-get update
 
 #install some packages with need for UserLAnd
 apt-get install -y --no-install-recommends sudo dropbear libgl1-mesa-glx tightvncserver xterm xfonts-base twm openbox expect
-apt-get install -y firefox-esr
-apt-get install -y pulseaudio
+apt-get install -y inkscape 
 
 #clean up after ourselves
 apt-get clean
+
+#fix a couple of things
+
+update-mime-database /usr/share/mime
+find /usr/lib -name gdk-pixbuf-query-loaders -exec {} --update-cache \;
+
+sed -i 's/<\/applications>/<application class="*"> <position force="yes"> <x>0<\/x> <y>0<\/y> <\/position> <size> <width>100%<\/width> <height>100%<\/height> <\/size> <\/application> <\/applications>/g' /etc/xdg/openbox/rc.xml
+openbox --reconfigure
 
 #tar up what we have before we grow it
 tar -czvf /output/rootfs.tar.gz --exclude sys --exclude dev --exclude proc --exclude mnt --exclude etc/mtab --exclude output --exclude input --exclude .dockerenv /
