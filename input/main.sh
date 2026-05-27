@@ -11,26 +11,14 @@ echo "export LIBGL_ALWAYS_SOFTWARE=1" >> /etc/profile.d/userland.sh
 chmod +x /etc/profile.d/userland.sh
 
 #update our repos so we can install some packages
-echo "deb http://deb.debian.org/debian/ buster main contrib non-free" > /etc/apt/sources.list
-echo "#deb-src http://deb.debian.org/debian/ buster main contrib non-free" >> /etc/apt/sources.list
-echo "deb http://deb.debian.org/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list
-echo "#deb-src http://deb.debian.org/debian/ buster-updates main contrib non-free" >> /etc/apt/sources.list
 apt-get update
 
 #install some packages with need for UserLAnd
-apt-get install -y --no-install-recommends sudo dropbear libgl1-mesa-glx tightvncserver xterm xfonts-base twm openbox expect
+apt-get install -y --no-install-recommends sudo dropbear libgl1 libglx-mesa0 tightvncserver xterm xfonts-base twm openbox wmctrl expect wget curl
 apt-get install -y inkscape 
 
 #clean up after ourselves
 apt-get clean
-
-#fix a couple of things
-
-update-mime-database /usr/share/mime
-find /usr/lib -name gdk-pixbuf-query-loaders -exec {} --update-cache \;
-
-sed -i 's/<\/applications>/<application class="*"> <position force="yes"> <x>0<\/x> <y>0<\/y> <\/position> <size> <width>100%<\/width> <height>100%<\/height> <\/size> <\/application> <\/applications>/g' /etc/xdg/openbox/rc.xml
-openbox --reconfigure
 
 #tar up what we have before we grow it
 tar -czvf /output/rootfs.tar.gz --exclude sys --exclude dev --exclude proc --exclude mnt --exclude etc/mtab --exclude output --exclude input --exclude .dockerenv /
