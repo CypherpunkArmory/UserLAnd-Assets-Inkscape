@@ -2,11 +2,12 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
 
 jobs:
   build_arm:
-    machine: true
+    machine:
+      image: ubuntu-2204:current
 
     working_directory: ~/UserLAnd-Assets-Debian
 
@@ -17,7 +18,7 @@ jobs:
           command: sudo apt-get update
       - run:
           name: install binfmt-support
-          command: sudo apt-get install binfmt-support qemu qemu-user-static
+          command: sudo apt-get install -y binfmt-support qemu-user-static
       - run:
           name: build arm assets
           command: ./buildArch.sh arm
@@ -27,7 +28,8 @@ jobs:
             - release/*    
 
   build_arm64:
-    machine: true
+    machine:
+      image: ubuntu-2204:current
 
     working_directory: ~/UserLAnd-Assets-Debian
 
@@ -38,7 +40,7 @@ jobs:
           command: sudo apt-get update
       - run:
           name: install binfmt-support
-          command: sudo apt-get install binfmt-support qemu qemu-user-static
+          command: sudo apt-get install -y binfmt-support qemu-user-static
       - run:
           name: build arm64 assets
           command: ./buildArch.sh arm64
@@ -48,7 +50,8 @@ jobs:
             - release/*    
 
   build_x86:
-    machine: true
+    machine:
+      image: ubuntu-2204:current
 
     working_directory: ~/UserLAnd-Assets-Debian
 
@@ -63,7 +66,8 @@ jobs:
             - release/*    
 
   build_x86_64:
-    machine: true
+    machine:
+      image: ubuntu-2204:current
 
     working_directory: ~/UserLAnd-Assets-Debian
 
@@ -93,7 +97,6 @@ jobs:
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -n ${VERSION} -delete -prerelease ${VERSION} release/
 
 workflows:
-  version: 2
   build_and_test:
     jobs:
       - build_arm:

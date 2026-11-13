@@ -1,8 +1,11 @@
 #!/bin/bash
 
-docker-compose -f main.yml -f $1.yml down
-docker-compose -f main.yml -f $1.yml build
-docker-compose -f main.yml -f $1.yml up
+# Newer hosts have only the compose plugin
+if command -v docker-compose >/dev/null; then dc=docker-compose; else dc="docker compose"; fi
+
+$dc -f main.yml -f $1.yml down
+$dc -f main.yml -f $1.yml build
+$dc -f main.yml -f $1.yml up
 mkdir -p release
 cp output/rootfs.tar.gz release/$1-rootfs.tar.gz
 mkdir -p release/assets
